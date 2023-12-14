@@ -29,7 +29,7 @@ const options = {
       }
     ]
   },
-  apis : ["/routes/*.js"]
+  apis : ["./routes/*.js"]
 }
 const spacs = swaggerjsdoc(options)
 app.use("/api-docs", swaggerui.serve, swaggerui.setup(spacs))

@@ -1,33 +1,51 @@
 const jwtMiddleware = require("../middlwares/jwtMiddlware")
 /**
  * @swagger
- * tags:
- *   name: Users
- *   description: API pour la gestion des utilisateurs
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: Adresse e-mail de l'utilisateur (unique)
+ *         password:
+ *           type: string
+ *           description: Mot de passe de l'utilisateur
+ *         createdAt:
+ *           type: Data
+ *           description : Date de création
  */
 
 module.exports = (app) => {
     const userController = require("../controllers/userController")
     
-    /**
-     * @swagger
-     * path:
-     *   /users/register:
-     *     post:
-     *       summary: Inscription d'un nouvel utilisateur
-     *       tags: [Users]
-     *       requestBody:
-     *         required: true
-     *         content:
-     *           application/json:
-     *             schema:
-     *               $ref: '#/components/schemas/User'
-     *       responses:
-     *         '200':
-     *           description: Utilisateur enregistré avec succès
-     *         '400':
-     *           description: Erreur de validation des données
-     */
+
+/**
+ * @swagger
+ * tags:
+ *  name: Users
+ *  description : The Users managing API
+ * /users/register:
+ *  post:
+ *      summary: Inscription d'un nouvel utilisateur
+ *      tags: [Users]
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       responses:
+ *         '200':
+ *           description: Utilisateur enregistré avec succès
+ *         '400':
+ *           description: Erreur de validation des données
+ */
     app.route("/users/register")
         .post(userController.userRegister);
 
