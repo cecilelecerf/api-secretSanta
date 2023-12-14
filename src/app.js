@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-// const swaggerDocument = require("./swagger.yaml");
 const swaggerui = require("swagger-ui-express");
 const swaggerjsdoc = require("swagger-jsdoc")
 const port = 3003;
@@ -10,6 +9,9 @@ mongoose.connect('mongodb://mongo/apinode')
 
 app.use(express.urlencoded());
 app.use(express.json());
+
+const userRoute = require("./routes/userRoutes");
+userRoute(app);
 
 const options = {
   definition:{
@@ -27,7 +29,7 @@ const options = {
       }
     ]
   },
-  apis : ["/routes/*.js"]
+  apis : ["./routes/*.js"]
 }
 const spacs = swaggerjsdoc(options)
 app.use("/api-docs", swaggerui.serve, swaggerui.setup(spacs))
