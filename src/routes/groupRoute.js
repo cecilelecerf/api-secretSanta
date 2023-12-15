@@ -25,6 +25,7 @@
 const jwtMiddleware = require("../middlwares/jwtMiddlware")
 module.exports = (app) => {
     const groupController = require("../controllers/groupController")
+    const memberController = require("../controllers/memberShipController")
     app.route("/groups")
         .get(groupController.listenAllGroups);
     app.route("/groups")
@@ -32,9 +33,9 @@ module.exports = (app) => {
     app.route("/groups/:group_id")
         .get(jwtMiddleware.verifyTokenUser, groupController.oneGroup);
     app.route("/groups/invite/:group_id/:user_id")
-        .post(jwtMiddleware.verifyTokenUser, groupController.inviteUser);
+        .post(jwtMiddleware.verifyTokenUser, memberController.inviteUser);
     app.route("/groups/accept/:group_id/:user_id")
-        .post(jwtMiddleware.verifyTokenGroup, groupController.acceptGroup)
+        .post(jwtMiddleware.verifyTokenGroup, memberController.acceptGroup)
 
 
 }
