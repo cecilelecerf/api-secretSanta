@@ -23,7 +23,23 @@ const jwtMiddleware = require("../middlwares/jwtMiddlware")
 
 module.exports = (app) => {
     const userController = require("../controllers/userController")
-    
+    /**
+     * @swagger
+     * /users/register:
+     *  get:
+     *      summary: Test
+     *      description: Test
+     *      responses:
+     *          200:
+     *              description: Test
+     *              content:
+     *                  application/json:
+     *                      schema:
+     *                          type: object
+     *                          items:
+     *                              $ref: '#components/schema/Groups'
+     * 
+     */
     app.route("/users/register")
         .post(userController.userRegister);
 
