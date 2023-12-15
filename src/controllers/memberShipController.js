@@ -63,16 +63,70 @@ exports.acceptGroup = async (req,res)=>{
 }
 
 
+// getRandomParticipant(){
+//     let beneficiary = this.people.slice();
+//     let result = '';
+
+//     // boucle pour chaque personne
+//     for(let i = 0; i<this.people.length; i++){
+//         let random = 0
+//         if (beneficiary.length > 1) {
+//             random = Math.floor(Math.random() * (0, beneficiary.length));
+
+//             // éviter d'offrir un cadeau à soi-même
+//             while (this.people[i].firstName == beneficiary[random].firstName){  
+//                 random = Math.floor(Math.random() * (0, beneficiary.length));
+//             }
+//         }
+//         else{
+//             random = 0;
+//         }
+
+//         // on ajoute le bénéficiaire à la personne à offrir
+//         this.people[i].setOffer(beneficiary[random]);
+
+//         // écriture du résultat
+//         result += this.people[i].firstName +' doit donner un cadeau à ' + this.people[i].offer.firstName + random + ', ';
+
+//         // supprimer la personne qui vient d'être concerné
+//         beneficiary.splice(random, 1);
+//     }
+
+//     // renvoyer le resultat
+//     // return result
+// }
+
 exports.draw = async (req,res)=>{
     try{
         const group = await Group.findById(req.params.group_id)
+        // vérification admin
         if(group.admin == req.params.user_id){
             const members = await Member.find({group_id : group.id, accept : true});
+            // vérification nombre
             if(members.length <3){
                 res.status(403).json({message : "Not enough users accepted the invitation"});
                 res.end()
             }
-            console.log(members)
+
+            // tout est good
+            let beneficiary = members.slice();
+            members.map(async (member)=>{
+                let random = 0;
+                if (beneficiary.length > 1) {
+                    random = Math.floor(Math.random() * (0, beneficiary.length));
+
+                    // éviter d'offrir un cadeau à soi-même
+                    while (member._id == beneficiary[random]._id){  
+                        random = Math.floor(Math.random() * (0, beneficiary.length));
+                    }
+                }
+                else{
+                    random = 0;
+                };
+                await Member.findByIdAndUpdate(member._id, {user_offer : beneficiary[random]})
+                beneficiary.splice(random, 1);
+            })
+            res.status(200).json(members)
         }
         else{
             res.status(403).json({message : "You are not an administrator"})
