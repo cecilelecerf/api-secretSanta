@@ -25,18 +25,17 @@ exports.verifyTokenUser = async(req, res, next)=>{
 }
 
 exports.verifyTokenGroup = async(req, res, next)=>{
-    console.log( req.headers["Group"])
-    try{ const token = req.headers["Group"];
+    try{ const token = req.body.tokenGroup;
         if(token !== undefined){
             const playload = await new Promise ((resolve, reject)=>{
                 jwt.verify(token, jwtKey, (error, decoded)=>{
                     if(error)
                         reject(error);
-                    else
+                    else{
                         resolve(decoded);
+                    }
                 })  
             });
-            console.log(req.group)
             req.group = playload;
             next()
         }
