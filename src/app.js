@@ -10,8 +10,11 @@ mongoose.connect('mongodb://mongo/apinode')
 app.use(express.urlencoded());
 app.use(express.json());
 
-const userRoute = require("./routes/userRoutes");
+const userRoute = require("./routes/userRoute");
 userRoute(app);
+
+const groupRoute = require("./routes/groupRoute");
+groupRoute(app);
 
 const options = {
   definition:{
