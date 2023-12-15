@@ -22,6 +22,7 @@
 //  *           description : Date de création
 //  */
 
+const jwtMiddleware = require("../middlwares/jwtMiddlware")
 module.exports = (app) => {
     const groupController = require("../controllers/groupController")
     app.route("/groups")
@@ -29,11 +30,11 @@ module.exports = (app) => {
     app.route("/groups")
         .post(groupController.createGroup);
     app.route("/groups/:group_id")
-        .get(groupController.oneGroup);
+        .get(jwtMiddleware.verifyTokenUser, groupController.oneGroup);
     app.route("/groups/invite/:group_id/:user_id")
-        .post(groupController.inviteUser);
-    app.route("/groups/acceot/:group_id/:user_id")
-        .post(groupController.acceptGroup)
+        .post(jwtMiddleware.verifyTokenUser, groupController.inviteUser);
+    app.route("/groups/accept/:group_id/:user_id")
+        .post(jwtMiddleware.verifyTokenGroup, groupController.acceptGroup)
 
 
 }

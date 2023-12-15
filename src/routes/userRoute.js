@@ -34,12 +34,12 @@ module.exports = (app) => {
         .get(userController.listenAllUsers);
 
     app.route("/users/:user_id")
-        .get(jwtMiddleware.verifyToken, userController.listenSingleUser);
+        .get(jwtMiddleware.verifyTokenUser, userController.listenSingleUser);
 
     app.route("/users/:user_id")
-        .put(jwtMiddleware.verifyToken, userController.updateUser);   
+        .put(jwtMiddleware.verifyTokenUser, userController.updateUser);   
 
     app.route("/users/:user_id")
-        .delete(jwtMiddleware.verifyToken, userController.deleteUser);
+        .delete(jwtMiddleware.verifyTokenUser, userController.deleteUser);
 
 }
