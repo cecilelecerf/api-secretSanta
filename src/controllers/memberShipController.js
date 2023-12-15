@@ -54,11 +54,21 @@ exports.inviteUser = async(req,res)=>{
 exports.acceptGroup = async (req,res)=>{
     try{
         const member = await Member.findOneAndUpdate({user_id : req.params.user_id, group_id : req.params.group_id}, {group_id : req.params.group_id, user_id : req.params.user_id, accept : req.body.accept})
-        res.status(200).json({member})
+        res.status(200).json(member)
         
     }catch(error){
         console.log(error);
         res.status(500).json({message : "Error server."})
+    }
+}
+
+exports.listenAllMembers = async(req, res)=>{
+    try{
+        const members = await Member.find({})
+        res.status(200).json(members)
+    }catch(error){
+        console.log(error);
+        res.status(500).json({message: "Error server."})
     }
 }
 
@@ -103,7 +113,8 @@ exports.draw = async (req,res)=>{
         if(group.admin == req.params.user_id){
             const members = await Member.find({group_id : group.id, accept : true});
             // vérification nombre
-            if(members.length <3){
+            // TODO : changer à 3
+            if(members.length <2){
                 res.status(403).json({message : "Not enough users accepted the invitation"});
                 res.end()
             }
@@ -123,10 +134,11 @@ exports.draw = async (req,res)=>{
                 else{
                     random = 0;
                 };
-                await Member.findByIdAndUpdate(member._id, {user_offer : beneficiary[random]})
+                await Member.findByIdAndUpdate(member._id, {user_offer : beneficiary[random]._id})
                 beneficiary.splice(random, 1);
             })
-            res.status(200).json(members)
+            const updateMembers = await Member.find({group_id : group.id, accept : true})
+            res.status(200).json(updateMembers)
         }
         else{
             res.status(403).json({message : "You are not an administrator"})
