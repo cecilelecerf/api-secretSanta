@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 
 exports.inviteUser = async(req,res)=>{
     try{
+        // TODO : ne pas invite si déjà accepté
         const group =  await Group.findById(req.params.group_id)
         if(group){
             try{
@@ -56,6 +57,27 @@ exports.acceptGroup = async (req,res)=>{
         res.status(200).json({member})
         
     }catch(error){
+        console.log(error);
+        res.status(500).json({message : "Error server."})
+    }
+}
+
+
+exports.draw = async (req,res)=>{
+    try{
+        const group = await Group.findById(req.params.group_id)
+        if(group.admin == req.params.user_id){
+            const members = await Member.find({group_id : group.id, accept : true});
+            if(members.length <3){
+                res.status(403).json({message : "Not enough users accepted the invitation"});
+                res.end()
+            }
+            console.log(members)
+        }
+        else{
+            res.status(403).json({message : "You are not an administrator"})
+        }
+    }catch (error){
         console.log(error);
         res.status(500).json({message : "Error server."})
     }
