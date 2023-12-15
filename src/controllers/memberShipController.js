@@ -22,6 +22,7 @@ exports.inviteUser = async(req,res)=>{
                 }
                 else{
                     const verificationPeopleResponse = await Member.findOne({user_id : user.id})
+                    // you cannot send an invitation if it has already been responded to
                     if(verificationPeopleResponse !== null && typeof verificationPeopleResponse === 'object' && 'accept' in verificationPeopleResponse){
                         res.status(409).json({message: "The person has already responded to the invitation"});
                         res.end()
