@@ -79,14 +79,15 @@ exports.listenSingleUser = async (req,res) => {
 exports.updateUser = async(req, res)=>{
     try{
         const user = await User.findById(req.params.user_id);
-        user.password = await this.hashPassword(user.password);
-        await User.findByIdAndUpdate(req.params.user_id, user, {new: true});
         if(user===null){
             res.status(404);
             res.json({message: "User not found"});
             res.end();
         }
-        res.status(200).json({user})
+        user.email = req.body.email
+        user.password = await this.hashPassword(user.password);
+        const updateUser =  await User.findByIdAndUpdate(req.params.user_id, user, {new: true});
+        res.status(200).json({updateUser})
     } catch(error){
         console.log(error);
         res.status(500).json({message: "Error server."})
@@ -96,7 +97,7 @@ exports.updateUser = async(req, res)=>{
 exports.deleteUser = async(req, res)=>{
     try{
         await User.findByIdAndDelete(req.params.user_id);
-        res.status(204).json({message: "User delete"})
+        res.status(204)
     } catch (error){
         console.log(error);
         res.status(500).json({message : "Error server."})
