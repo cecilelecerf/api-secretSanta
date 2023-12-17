@@ -79,7 +79,12 @@ exports.acceptGroup = async (req,res)=>{
 // list of all users for whom an invitation has been sent by group
 exports.listenAllMembersOfGroup = async(req, res)=>{
     try{
-        const members = await Member.find({group_id : req.params.group_id})
+        const group = await Group.findById(req.params.group_id);
+        if(!group){
+            res.status(404).json({message: "Group not found"});
+            res.end()
+        }
+        const members = await Member.find({group_id : group._id})
         res.status(200).json(members)
     }catch(error){
         console.log(error);
@@ -90,7 +95,12 @@ exports.listenAllMembersOfGroup = async(req, res)=>{
 // list of all users who accepted the invitation in each group
 exports.listenAllMembersOfGroupAndAccept = async(req, res)=>{
     try{
-        const members = await Member.find({group_id : req.params.group_id})
+        const group = await Group.findById(req.params.group_id);
+        if(!group){
+            res.status(404).json({message: "Group not found"});
+            res.end()
+        }
+        const members = await Member.find({group_id : group._id})
         res.status(200).json(members)
     }catch(error){
         console.log(error);
@@ -138,6 +148,22 @@ exports.draw = async (req,res)=>{
     }catch (error){
         console.log(error);
         res.status(500).json({message : "Error server."})
+    }
+}
+
+exports.listenAllMemberOfUser = async(req, res)=>{
+    try{
+        const user = await User.findById(req.params.user_id);
+        if(!user){
+            res.status(404).json({message: "User not found"})
+            res.end()
+        }
+        const members = await Member.find({user_id : req.params.user_id});
+        res.status(200).json(members)
+        
+    }catch(error){
+        console.log(error)
+        res.status(500).json({message: "Error server."})
     }
 }
 

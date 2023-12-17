@@ -9,7 +9,11 @@
  *       required:
  *         - group_id
  *         - user_id
+ *         - _id
  *       properties:
+ *         _id:
+ *             type: string
+ *             description: User Id (unique)
  *         group_id:
  *           type: string
  *           description: Group Id
@@ -26,7 +30,7 @@
  *           nullable: true
  *         createdAt:
  *           type: Data
- *           description : Date of created
+ *           description : Creation date
  * 
  *     ResponseObject:
  *       type: object
@@ -56,7 +60,7 @@ module.exports = (app) => {
  *           required: true
  *           schema:
  *             type: string
- *           description: ID de l'utilisateur à récupérer
+ *           description: User ID to retrieve
  *         - in: path
  *           name: group_id
  *           required: true
@@ -117,13 +121,13 @@ app.route("/group/invite/:group_id/:user_id")
 *           required: true
 *           schema:
 *             type: string
-*           description: ID de l'utilisateur à récupérer
+*           description: User ID to retrieve
 *         - in: path
 *           name: group_id
 *           required: true
 *           schema:
 *             type: string
-*           description: ID du groupe
+*           description: Group ID
 *     requestBody:
 *       required: true
 *       content:
@@ -178,21 +182,22 @@ app.route("/group/accept/:group_id/:user_id")
 *           required: true
 *           schema:
 *             type: string
-// TODO: fr
-*           description: ID de l'utilisateur à récupérer
+*           description: User ID to retrieve
 *         - in: path
 *           name: group_id
 *           required: true
 *           schema:
 *             type: string
-*           description: ID du groupe
+*           description: Group ID
 *     responses:
 *       200:
 *         description: Secret Santa draw for a given group
 *         content:
 *           application/json:
 *             schema:
-*               $ref: '#/components/schemas/User'
+*               type: array
+*               items:
+*                   $ref: '#/components/schemas/Membership'
 *       401:
 *          description: Access prohibited missing token | Access prohibited invalid token
 *          content:
@@ -236,7 +241,9 @@ app.route("/group/draw/:group_id/:user_id")
 *         content:
 *           application/json:
 *             schema:
-*               $ref: '#/components/schemas/User'
+*               type: array
+*               items: 
+*                   $ref: '#/components/schemas/Membership'
 *       401:
 *          description: Access prohibited missing token | Access prohibited invalid token
 *          content:
@@ -248,6 +255,12 @@ app.route("/group/draw/:group_id/:user_id")
 *                      invalid token:
 *                          value:
 *                              message: "Access prohibited invalid token"
+*       404:
+*           description: Group not found
+*           content:
+*               application/json:
+*                   example:
+*                       message: "Group not found"                    
 *       500:
 *         description: Some server error
 *         content:
@@ -257,16 +270,16 @@ app.route("/group/draw/:group_id/:user_id")
 *
 */   
 app.route("/groups/members/:group_id")
-// TODO : controller
+    .get(jwtMiddleware.verifyTokenUser, memberController.listenAllMembersOfGroup)
 
 /**
 * @swagger
-* /groups/members/{group_id}:
-*   security:
-*      - BearerAuth: []
+* /groups/members/accept/{group_id}:
 *   get:
 *     summary: List of all invitations sent in a group and which have been accepted
 *     tags: [Groups]
+*     security:
+*         - BearerAuth: []
 *     parameters:
 *         - in: path
 *           name: group_id
@@ -280,7 +293,9 @@ app.route("/groups/members/:group_id")
 *         content:
 *           application/json:
 *             schema:
-*               $ref: '#/components/schemas/User'
+*               type: array
+*               items: 
+*                   $ref: '#/components/schemas/Membership'
 *       401:
 *          description: Access prohibited missing token | Access prohibited invalid token
 *          content:
@@ -292,6 +307,12 @@ app.route("/groups/members/:group_id")
 *                      invalid token:
 *                          value:
 *                              message: "Access prohibited invalid token"
+*       404:
+*           description: Group not found
+*           content:
+*               application/json:
+*                   example:
+*                       message: "Group not found"   
 *       500:
 *         description: Some server error
 *         content:
@@ -303,6 +324,57 @@ app.route("/groups/members/:group_id")
 app.route("/groups/members/accept/:group_id")
 .get(memberController.listenAllMembersOfGroupAndAccept)
 
-// TODO : route tous les groupes d'un u
+
+/**
+* @swagger
+* /groups/members/user/{user_id}:
+*   get:
+*     summary: List of all groups of a user
+*     tags: [Groups]
+*     security:
+*         - BearerAuth: []
+*     parameters:
+*         - in: path
+*           name: user_id
+*           required: true
+*           schema:
+*             type: string
+*           description: Id of user
+*     responses:
+*       200:
+*         description: List of all invitations sent in a group and which have been accepted
+*         content:
+*           application/json:
+*             schema:
+*               type: array
+*               items: 
+*                   $ref: '#/components/schemas/Membership'
+*       401:
+*          description: Access prohibited missing token | Access prohibited invalid token
+*          content:
+*              application/json:
+*                  examples:
+*                      missing token:
+*                          value:
+*                              message: "Access prohibited missing token"
+*                      invalid token:
+*                          value:
+*                              message: "Access prohibited invalid token"
+*       404:
+*           description: Group not found
+*           content:
+*               application/json:
+*                   example:
+*                       message: "Group not found"   
+*       500:
+*         description: Some server error
+*         content:
+*           application/json:
+*             example:
+*               message: "Error server."
+*
+*/   
+app.route("groups/members/user/:user_id")
+    .get(jwtMiddleware.verifyTokenUser, memberController.listenAllMemberOfUser)
 
 }

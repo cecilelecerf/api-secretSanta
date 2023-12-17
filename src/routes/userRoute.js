@@ -7,19 +7,28 @@ const jwtMiddleware = require("../middlwares/jwtMiddlware")
  *       type: object
  *       required:
  *         - email
+ *         - _id
  *       properties:
+ *         _id:
+ *             type: string
+ *             description: User Id (unique)
  *         email:
  *           type: string
  *           format: email
- *           description: Adresse e-mail de l'utilisateur (unique)
+ *           description: User email address (unique)
  *         password:
  *           type: string
  *           format: password
- *           description: Mot de passe de l'utilisateur
+ *           description: User password
  *           nullable: true
  *         createdAt:
  *           type: Data
- *           description : Date de création
+ *           description : Creation date
+ *     TokenResponse:
+ *         type: object
+ *         properties:
+ *             token:
+ *                 type: string
  */
 
 module.exports = (app) => {
@@ -43,11 +52,11 @@ module.exports = (app) => {
  *                  email:
  *                      type: string
  *                      format: email
- *                      description: Adresse e-mail de l'utilisateur (unique)
+ *                      description: User email adress (unique)
  *                  password:
  *                      type: string
  *                      format: password
- *                      description: Mot de passe de l'utilisateur
+ *                      description: User password
  *              required:
  *                  - email
  *                  - password
@@ -86,11 +95,11 @@ module.exports = (app) => {
  *                  email:
  *                      type: string
  *                      format: email
- *                      description: Adresse e-mail de l'utilisateur (unique)
+ *                      description: User email adress (unique)
  *                  password:
  *                      type: string
  *                      format: password
- *                      description: Mot de passe de l'utilisateur
+ *                      description: User password
  *              required:
  *                  - email
  *                  - password
@@ -100,7 +109,7 @@ module.exports = (app) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *                 $ref: '#/components/schemas/TokenResponse'
  *       401:
  *         description: Email or password incorrect
  *         content:
@@ -118,9 +127,6 @@ module.exports = (app) => {
  */
     app.route("/users/login")
         .post(userController.userLogin);
-
-// TODO : listen all user array
-
 /**
  * @swagger
  * /users:
@@ -161,7 +167,7 @@ module.exports = (app) => {
  *           required: true
  *           schema:
  *             type: string
- *           description: ID de l'utilisateur à récupérer
+ *           description: User ID to retrieve
  *     responses:
  *       200:
  *         description: Viewing a user
@@ -208,11 +214,11 @@ module.exports = (app) => {
  *                  email:
  *                      type: string
  *                      format: email
- *                      description: Adresse e-mail de l'utilisateur (unique)
+ *                      description: User email adress (unique)
  *                  password:
  *                      type: string
  *                      format: password
- *                      description: Mot de passe de l'utilisateur
+ *                      description: User password
  *              required:
  *                  - email
  *                  - password
@@ -224,7 +230,7 @@ module.exports = (app) => {
  *           required: true
  *           schema:
  *             type: string
- *           description: ID de l'utilisateur à récupérer
+ *           description: User ID to retrieve
  *     responses:
  *       200:
  *         description: Modify a user
@@ -268,7 +274,7 @@ module.exports = (app) => {
  *           required: true
  *           schema:
  *             type: string
- *           description: ID de l'utilisateur à récupérer
+ *           description: User ID to retrieve
  *     responses:
  *       204:
  *         description: Delete a user

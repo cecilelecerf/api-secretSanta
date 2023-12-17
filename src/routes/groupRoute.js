@@ -8,7 +8,11 @@
  *       required:
  *         - name
  *         - admin
+ *         - _id
  *       properties:
+ *         _id:
+ *             type: string
+ *             description: User Id (unique)
  *         name:
  *           type: string
  *           description: Group name (unique)
@@ -117,7 +121,7 @@ module.exports = (app) => {
  *           required: true
  *           schema:
  *             type: string
- *           description: ID du groupe
+ *           description: Group ID
  *     responses:
  *       200:
  *         description: One Group.
