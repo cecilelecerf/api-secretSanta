@@ -118,9 +118,6 @@ module.exports = (app) => {
  */
     app.route("/users/login")
         .post(userController.userLogin);
-
-// TODO : listen all user array
-
 /**
  * @swagger
  * /users:
