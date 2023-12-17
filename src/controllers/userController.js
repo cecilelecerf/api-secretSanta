@@ -96,7 +96,8 @@ exports.updateUser = async(req, res)=>{
 exports.deleteUser = async(req, res)=>{
     try{
         await User.findByIdAndDelete(req.params.user_id);
-        res.status(204)
+        res.status(204);
+        res.end()
     } catch (error){
         console.log(error);
         res.status(500).json({message : "Error server."})
