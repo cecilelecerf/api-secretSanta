@@ -26,7 +26,7 @@
  *           nullable: true
  *         createdAt:
  *           type: Data
- *           description : Date of created
+ *           description : Creation date
  * 
  *     ResponseObject:
  *       type: object
@@ -56,7 +56,7 @@ module.exports = (app) => {
  *           required: true
  *           schema:
  *             type: string
- *           description: ID de l'utilisateur à récupérer
+ *           description: User ID to retrieve
  *         - in: path
  *           name: group_id
  *           required: true
@@ -117,13 +117,13 @@ app.route("/group/invite/:group_id/:user_id")
 *           required: true
 *           schema:
 *             type: string
-*           description: ID de l'utilisateur à récupérer
+*           description: User ID to retrieve
 *         - in: path
 *           name: group_id
 *           required: true
 *           schema:
 *             type: string
-*           description: ID du groupe
+*           description: Group ID
 *     requestBody:
 *       required: true
 *       content:
@@ -178,13 +178,13 @@ app.route("/group/accept/:group_id/:user_id")
 *           required: true
 *           schema:
 *             type: string
-*           description: ID de l'utilisateur à récupérer
+*           description: User ID to retrieve
 *         - in: path
 *           name: group_id
 *           required: true
 *           schema:
 *             type: string
-*           description: ID du groupe
+*           description: Group ID
 *     responses:
 *       200:
 *         description: Secret Santa draw for a given group

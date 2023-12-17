@@ -11,15 +11,15 @@ const jwtMiddleware = require("../middlwares/jwtMiddlware")
  *         email:
  *           type: string
  *           format: email
- *           description: Adresse e-mail de l'utilisateur (unique)
+ *           description: User email address (unique)
  *         password:
  *           type: string
  *           format: password
- *           description: Mot de passe de l'utilisateur
+ *           description: User password
  *           nullable: true
  *         createdAt:
  *           type: Data
- *           description : Date de création
+ *           description : Creation date
  */
 
 module.exports = (app) => {
@@ -43,11 +43,11 @@ module.exports = (app) => {
  *                  email:
  *                      type: string
  *                      format: email
- *                      description: Adresse e-mail de l'utilisateur (unique)
+ *                      description: User email adress (unique)
  *                  password:
  *                      type: string
  *                      format: password
- *                      description: Mot de passe de l'utilisateur
+ *                      description: User password
  *              required:
  *                  - email
  *                  - password
@@ -86,11 +86,11 @@ module.exports = (app) => {
  *                  email:
  *                      type: string
  *                      format: email
- *                      description: Adresse e-mail de l'utilisateur (unique)
+ *                      description: User email adress (unique)
  *                  password:
  *                      type: string
  *                      format: password
- *                      description: Mot de passe de l'utilisateur
+ *                      description: User password
  *              required:
  *                  - email
  *                  - password
@@ -158,7 +158,7 @@ module.exports = (app) => {
  *           required: true
  *           schema:
  *             type: string
- *           description: ID de l'utilisateur à récupérer
+ *           description: User ID to retrieve
  *     responses:
  *       200:
  *         description: Viewing a user
@@ -205,11 +205,11 @@ module.exports = (app) => {
  *                  email:
  *                      type: string
  *                      format: email
- *                      description: Adresse e-mail de l'utilisateur (unique)
+ *                      description: User email adress (unique)
  *                  password:
  *                      type: string
  *                      format: password
- *                      description: Mot de passe de l'utilisateur
+ *                      description: User password
  *              required:
  *                  - email
  *                  - password
@@ -221,7 +221,7 @@ module.exports = (app) => {
  *           required: true
  *           schema:
  *             type: string
- *           description: ID de l'utilisateur à récupérer
+ *           description: User ID to retrieve
  *     responses:
  *       200:
  *         description: Modify a user
@@ -265,7 +265,7 @@ module.exports = (app) => {
  *           required: true
  *           schema:
  *             type: string
- *           description: ID de l'utilisateur à récupérer
+ *           description: User ID to retrieve
  *     responses:
  *       204:
  *         description: Delete a user

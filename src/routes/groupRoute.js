@@ -117,7 +117,7 @@ module.exports = (app) => {
  *           required: true
  *           schema:
  *             type: string
- *           description: ID du groupe
+ *           description: Group ID
  *     responses:
  *       200:
  *         description: One Group.
