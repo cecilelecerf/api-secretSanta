@@ -133,7 +133,9 @@ module.exports = (app) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *                 type: array
+ *                 items:
+ *                     $ref: '#/components/schemas/User'
  *       500:
  *         description: Some server error
  *         content:
