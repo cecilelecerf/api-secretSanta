@@ -17,10 +17,10 @@ exports.verifyTokenUser = async(req, res, next)=>{
             next()
         }
         else
-            res.status(403).json({message: "Accès interdit: token manquant"})
+            res.status(401).json({message: "Access prohibited missing token"})
     } catch (error){
         console.log(error);
-        res.status(403).json({message : "Accès interdit : token non valide"})
+        res.status(401).json({message : "Access prohibited invalid token"})
     }
 }
 
@@ -40,9 +40,9 @@ exports.verifyTokenGroup = async(req, res, next)=>{
             next()
         }
         else
-            res.status(403).json({message: "Accès interdit: tmanquant"})
+            res.status(401).json({message: "Access prohibited missing token"})
     } catch (error){
         console.log(error);
-        res.status(403).json({message : "Accès interdit : token non valide"})
+        res.status(401).json({message : "Access prohibited invalid token"})
     }
 }
