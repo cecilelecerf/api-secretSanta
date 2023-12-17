@@ -71,5 +71,3 @@ exports.deleteGroup = async(req, res)=>{
     }
 }
 
-// TODO: UPDATE AND DELETE GROUP
-
