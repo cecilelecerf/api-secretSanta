@@ -16,6 +16,9 @@ userRoute(app);
 const groupRoute = require("./routes/groupRoute");
 groupRoute(app);
 
+const memberShipRoute = require("./routes/memberShipRoute");
+memberShipRoute(app)
+
 const options = {
   definition:{
     openapi : "3.0.0",
