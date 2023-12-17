@@ -64,7 +64,8 @@ exports.deleteGroup = async(req, res)=>{
             res.end()
         }
         await Group.findByIdAndDelete(req.params.group_id)    
-        res.status(204)   
+        res.status(204);
+        res.end()
     }catch(error){
         console.log(error);
         res.status(500).json({message:"Error server."})
