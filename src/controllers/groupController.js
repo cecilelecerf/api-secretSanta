@@ -63,9 +63,11 @@ exports.deleteGroup = async(req, res)=>{
             res.status(403).json({message: "You are not an adminstrator of this group"})
             res.end()
         }
-        await Group.findByIdAndDelete(req.params.group_id)       
+        await Group.findByIdAndDelete(req.params.group_id)    
+        res.status(204)   
     }catch(error){
-
+        console.log(error);
+        res.status(500).json({message:"Error server."})
     }
 }
 
