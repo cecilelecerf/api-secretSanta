@@ -18,38 +18,6 @@
  *         createdAt:
  *           type: Data
  *           description : Date of created
- * 
- *     Membership:
- *       type: object
- *       required:
- *         - group_id
- *         - user_id
- *       properties:
- *         group_id:
- *           type: string
- *           description: Group Id
- *         user_id:
- *           type: string
- *           description: User Id
- *         accept:
- *           type: boolean
- *           description: Did the user accept the invitation?
- *           nullable: true
- *         user_offer:
- *           type: string
- *           description: id of the user to whom to give the gift
- *           nullable: true
- *         createdAt:
- *           type: Data
- *           description : Date of created
- * 
- *     ResponseObject:
- *       type: object
- *       properties:
- *          membership:
- *              $ref: '#/components/schemas/Membership'
- *          token:
- *              type: string
  */
 const jwtMiddleware = require("../middlwares/jwtMiddlware")
 module.exports = (app) => {
@@ -60,7 +28,7 @@ module.exports = (app) => {
  * @swagger
  * tags:
  *   name: Groups
- *   description: The Groups managing API
+ *   description: The Groups CRUD
  * /groups:
  *   post:
  *     summary: Create a new Group
@@ -179,27 +147,15 @@ module.exports = (app) => {
     app.route("/group/:group_id")
         .get(jwtMiddleware.verifyTokenUser, groupController.oneGroup);
 
+
 /**
  * @swagger
- * /group/invite/{group_id}/{user_id}:
+ * /group/delete/{group_id}:
  *   post:
- *     summary: Inviting a user
+ *     summary: Delete a Group
  *     tags: [Groups]
  *     security:
  *         - BearerAuth: []
- *     parameters:
- *         - in: path
- *           name: user_id
- *           required: true
- *           schema:
- *             type: string
- *           description: ID de l'utilisateur à récupérer
- *         - in: path
- *           name: group_id
- *           required: true
- *           schema:
- *             type: string
- *           description: ID du groupe
  *     requestBody:
  *       required: true
  *       content:
@@ -207,18 +163,13 @@ module.exports = (app) => {
  *           schema:
  *               type: object
  *               properties:
- *                   email:
+ *                   user_id:
  *                       type: string
- *                       format: email
- *                       description: Email of user (unique)
+ *                       description: Id of the user (unique)
  *     responses:
- *       201:
- *         description: Inviting a user
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ResponseObject'
- *       401:
+ *       204:
+ *         description: The group has been deleted.
+*       401:
  *          description: Access prohibited missing token | Access prohibited invalid token
  *          content:
  *              application/json:
@@ -237,30 +188,17 @@ module.exports = (app) => {
  *               message: "Error server."
  *
  */
-    app.route("/group/invite/:group_id/:user_id")
-        .post(jwtMiddleware.verifyTokenUser, memberController.inviteUser);
-        
+app.route("group/delete/:group_id")
+    .put(jwtMiddleware.verifyTokenUser, groupController.deleteGroup)
+
 /**
  * @swagger
- * /group/accept/{group_id}/{user_id}:
- *   post:
- *     summary: User accept invite
+ * /group/update/{group_id}:
+ *   put:
+ *     summary: Update a Group
  *     tags: [Groups]
  *     security:
  *         - BearerAuth: []
- *     parameters:
- *         - in: path
- *           name: user_id
- *           required: true
- *           schema:
- *             type: string
- *           description: ID de l'utilisateur à récupérer
- *         - in: path
- *           name: group_id
- *           required: true
- *           schema:
- *             type: string
- *           description: ID du groupe
  *     requestBody:
  *       required: true
  *       content:
@@ -268,18 +206,23 @@ module.exports = (app) => {
  *           schema:
  *               type: object
  *               properties:
- *                   accept:
- *                       type: boolean
- *                       format: boolean
- *                       description: User accept or not invitation
+ *                   name:
+ *                       type: string
+ *                       description: Name of the group (unique)
+ *                   admin:
+ *                       type: string
+ *                       description: Id of the admin
+ *                   user_id:
+ *                       type: string
+ *                       description: Id of this user
  *     responses:
- *       201:
- *         description: User accept invite
+ *       200:
+ *         description: The group has been updated.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Membership'
- *       401:
+ *               $ref: '#/components/schemas/Group'
+*       401:
  *          description: Access prohibited missing token | Access prohibited invalid token
  *          content:
  *              application/json:
@@ -298,148 +241,7 @@ module.exports = (app) => {
  *               message: "Error server."
  *
  */
-    app.route("/group/accept/:group_id/:user_id")
-        .post(jwtMiddleware.verifyTokenGroup, memberController.acceptGroup);
-
-/**
- * @swagger
- * /group/draw/{group_id}/{user_id}:
- *   get:
- *     summary: Secret Santa draw for a given group
- *     tags: [Groups]
- *     security:
- *         - BearerAuth: []
- *     parameters:
- *         - in: path
- *           name: user_id
- *           required: true
- *           schema:
- *             type: string
-// TODO: fr
- *           description: ID de l'utilisateur à récupérer
- *         - in: path
- *           name: group_id
- *           required: true
- *           schema:
- *             type: string
- *           description: ID du groupe
- *     responses:
- *       200:
- *         description: Secret Santa draw for a given group
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       401:
- *          description: Access prohibited missing token | Access prohibited invalid token
- *          content:
- *              application/json:
- *                  examples:
- *                      missing token:
- *                          value:
- *                              message: "Access prohibited missing token"
- *                      invalid token:
- *                          value:
- *                              message: "Access prohibited invalid token"
- *       500:
- *         description: Some server error
- *         content:
- *           application/json:
- *             example:
- *               message: "Error server."
- *
- */
-    app.route("/group/draw/:group_id/:user_id")
-        .get(jwtMiddleware.verifyTokenUser, memberController.draw);
-
-/**
- * @swagger
- * /groups/members/{group_id}:
- *   get:
- *     summary: List of all invitations sent in a Group
- *     tags: [Groups]
- *     security:
- *         - BearerAuth: []
- *     parameters:
- *         - in: path
- *           name: group_id
- *           required: true
- *           schema:
- *             type: string
- *           description: Id of group
- *     responses:
- *       200:
- *         description: List of all invitations sent in a Group
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       401:
- *          description: Access prohibited missing token | Access prohibited invalid token
- *          content:
- *              application/json:
- *                  examples:
- *                      missing token:
- *                          value:
- *                              message: "Access prohibited missing token"
- *                      invalid token:
- *                          value:
- *                              message: "Access prohibited invalid token"
- *       500:
- *         description: Some server error
- *         content:
- *           application/json:
- *             example:
- *               message: "Error server."
- *
- */   
-app.route("/groups/members/:group_id")
-// TODO : controller
-
-/**
- * @swagger
- * /groups/members/{group_id}:
- *   security:
- *      - BearerAuth: []
- *   get:
- *     summary: List of all invitations sent in a group and which have been accepted
- *     tags: [Groups]
- *     parameters:
- *         - in: path
- *           name: group_id
- *           required: true
- *           schema:
- *             type: string
- *           description: Id of group
- *     responses:
- *       200:
- *         description: List of all invitations sent in a group and which have been accepted
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/User'
- *       401:
- *          description: Access prohibited missing token | Access prohibited invalid token
- *          content:
- *              application/json:
- *                  examples:
- *                      missing token:
- *                          value:
- *                              message: "Access prohibited missing token"
- *                      invalid token:
- *                          value:
- *                              message: "Access prohibited invalid token"
- *       500:
- *         description: Some server error
- *         content:
- *           application/json:
- *             example:
- *               message: "Error server."
- *
- */   
-app.route("/groups/members/accept/:group_id")
-.get(memberController.listenAllMembersOfGroupAndAccept)
-
-// TODO : route tous les groupes d'un user
+app.route("group/update/:group_id")
+    .post(jwtMiddleware.verifyTokenUser, groupController.updateGroup)
 
 }
