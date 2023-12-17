@@ -9,7 +9,11 @@
  *       required:
  *         - group_id
  *         - user_id
+ *         - _id
  *       properties:
+ *         _id:
+ *             type: string
+ *             description: User Id (unique)
  *         group_id:
  *           type: string
  *           description: Group Id
@@ -191,7 +195,9 @@ app.route("/group/accept/:group_id/:user_id")
 *         content:
 *           application/json:
 *             schema:
-*               $ref: '#/components/schemas/Membership'
+*               type: array
+*               items:
+*                   $ref: '#/components/schemas/Membership'
 *       401:
 *          description: Access prohibited missing token | Access prohibited invalid token
 *          content:
@@ -321,7 +327,7 @@ app.route("/groups/members/accept/:group_id")
 
 /**
 * @swagger
-* /groups/members/{user_id}:
+* /groups/members/user/{user_id}:
 *   get:
 *     summary: List of all groups of a user
 *     tags: [Groups]
@@ -368,7 +374,7 @@ app.route("/groups/members/accept/:group_id")
 *               message: "Error server."
 *
 */   
-app.route("groups/members/:user_id")
+app.route("groups/members/user/:user_id")
     .get(jwtMiddleware.verifyTokenUser, memberController.listenAllMemberOfUser)
 
 }

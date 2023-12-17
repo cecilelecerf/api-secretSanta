@@ -7,7 +7,11 @@ const jwtMiddleware = require("../middlwares/jwtMiddlware")
  *       type: object
  *       required:
  *         - email
+ *         - _id
  *       properties:
+ *         _id:
+ *             type: string
+ *             description: User Id (unique)
  *         email:
  *           type: string
  *           format: email
@@ -20,6 +24,11 @@ const jwtMiddleware = require("../middlwares/jwtMiddlware")
  *         createdAt:
  *           type: Data
  *           description : Creation date
+ *     TokenResponse:
+ *         type: object
+ *         properties:
+ *             token:
+ *                 type: string
  */
 
 module.exports = (app) => {
@@ -100,7 +109,7 @@ module.exports = (app) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *                 $ref: '#/components/schemas/TokenResponse'
  *       401:
  *         description: Email or password incorrect
  *         content:

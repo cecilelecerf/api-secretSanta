@@ -8,7 +8,11 @@
  *       required:
  *         - name
  *         - admin
+ *         - _id
  *       properties:
+ *         _id:
+ *             type: string
+ *             description: User Id (unique)
  *         name:
  *           type: string
  *           description: Group name (unique)
