@@ -7,8 +7,7 @@ let userSchema = new Schema ({
         unique: true
     },
     password: {
-        type: String,
-        required: true 
+        type: String
     },
     createdAt : {
         type : Date,

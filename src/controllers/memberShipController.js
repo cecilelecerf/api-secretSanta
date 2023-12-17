@@ -7,7 +7,15 @@ const jwt = require("jsonwebtoken");
 exports.inviteUser = async(req,res)=>{
     try{
         const group =  await Group.findById(req.params.group_id)
-        if(group){
+        if(!group){
+            res.status(404).json({message : "Group not found"})
+            res.end()
+        }
+        else if(group.admin !== req.params.user_id ){
+            res.status(403).json({message: "You are not an adminstrator of this group"});
+            res.end()
+        }
+        else{
             try{
                 let user = await User.findOne({email : req.body.email})
                 if(!user){
@@ -48,9 +56,6 @@ exports.inviteUser = async(req,res)=>{
                 res.status(500).json({message: "Error server."})
             }
         }
-        else {
-            res.status(404).json({message : "Group not found"})
-        }
     }catch(error){
         console.log(error)
         res.status(500).json({message : "Error server."})
@@ -70,15 +75,6 @@ exports.acceptGroup = async (req,res)=>{
     }
 }
 
-exports.listenAllMembers = async(req, res)=>{
-    try{
-        const members = await Member.find({})
-        res.status(200).json(members)
-    }catch(error){
-        console.log(error);
-        res.status(500).json({message: "Error server."})
-    }
-}
 
 // list of all users for whom an invitation has been sent by group
 exports.listenAllMembersOfGroup = async(req, res)=>{
@@ -101,40 +97,6 @@ exports.listenAllMembersOfGroupAndAccept = async(req, res)=>{
         res.status(500).json({message: "Error server."})
     }
 }
-
-
-// getRandomParticipant(){
-//     let beneficiary = this.people.slice();
-//     let result = '';
-
-//     // boucle pour chaque personne
-//     for(let i = 0; i<this.people.length; i++){
-//         let random = 0
-//         if (beneficiary.length > 1) {
-//             random = Math.floor(Math.random() * (0, beneficiary.length));
-
-//             // éviter d'offrir un cadeau à soi-même
-//             while (this.people[i].firstName == beneficiary[random].firstName){  
-//                 random = Math.floor(Math.random() * (0, beneficiary.length));
-//             }
-//         }
-//         else{
-//             random = 0;
-//         }
-
-//         // on ajoute le bénéficiaire à la personne à offrir
-//         this.people[i].setOffer(beneficiary[random]);
-
-//         // écriture du résultat
-//         result += this.people[i].firstName +' doit donner un cadeau à ' + this.people[i].offer.firstName + random + ', ';
-
-//         // supprimer la personne qui vient d'être concerné
-//         beneficiary.splice(random, 1);
-//     }
-
-//     // renvoyer le resultat
-//     // return result
-// }
 
 
 // method of drawing lots

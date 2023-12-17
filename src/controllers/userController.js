@@ -20,7 +20,7 @@ exports.userRegister = async(req, res)=>{
         res.status(201).json({message: `User crée ${user.email}`})
     } catch (error){
         console.log(error);
-        res.status(401).json({message: "Requete invalide"})
+        res.status(500).json({message: "Error server."})
     }
 }
 
